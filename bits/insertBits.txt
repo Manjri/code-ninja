@@ -1,0 +1,23 @@
+bool containsDuplicates(std::vector<int> a) {
+
+    //lookup table?
+    int idx=0;
+    int size = a.size();
+    std::set<int> lookup;
+
+    
+    for(int i=0; i<a.size(); i++)
+    {
+        if(lookup.find(a[i]) != lookup.end()) //value present
+        {
+            cout<<"present value: "<< a[i] <<"\n";
+            return false;
+        }
+        else
+        {
+            lookup.insert(a[i]);
+        }
+    }
+    
+    return true;
+}

@@ -1,0 +1,56 @@
+#include<vector>
+#include<iostream>
+
+using namespace std;
+
+vector<int> findprime(int n)
+{
+    vector<int> primelist(n,1); //all are primes initially
+    for(int i=2; i*i<=n; i++)
+    {
+        if(primelist[i] == 1)
+        {
+            for(int j=2*i; j<=n; j=j+i) //mark mutiples of i as not prime
+            {
+                primelist[j] = 0;
+            }
+        }
+    }
+    
+    return primelist;
+}
+
+int main()
+{
+  vector<int> primes = findprime(16);
+  
+  for(int i=2; i<primes.size(); i++)
+  {
+    if(primes[i] == 1)
+    {
+      cout<<i<<" ";
+    }
+  }
+  
+  vector<int> returnvec;
+  int sz = primes.size();
+  int j;
+    
+  for(int i=2; i<sz; i++)
+  {
+    j = sz-i;
+    if(primes[i] == 1 && primes[j] == 1)
+    {
+      cout<<"\n";
+      cout<<" i: "<< i << " ,and: "<< j <<"\n";
+      if(i+ j == 16)
+      {   
+            cout<<"here pushing i: "<< i << " ,and: "<< j <<"\n";
+            returnvec.push_back(i);
+            returnvec.push_back(j);
+      }
+    }
+  }
+    
+  return 0;
+}
