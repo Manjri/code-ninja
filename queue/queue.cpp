@@ -45,8 +45,9 @@ void queue_enqueue(queue* q, int n)
         q->array[0] = n;
         q->tail = 0;
         q->head = 0;
+        q->size++;
     }
-    else if((q->tail + 1) % (q->capacity) == q->head)//full
+    else if((q->tail + 1) % (q->capacity) == q->head)//full. current element at tail
     {
         cout<<"Queue Full!"<<"\n";
     }
@@ -56,6 +57,7 @@ void queue_enqueue(queue* q, int n)
         
         q->tail = (q->tail + 1) % (q->capacity);  
         q->array[q->tail] = n;
+        q->size++;
     }
 
 }
@@ -75,6 +77,7 @@ void queue_dequeue(queue* q)
         cout<<"removing: "<< n <<"\n";
         q->head = -1;
         q->tail = -1;
+        q->size--;
     }
     else
     {
@@ -82,6 +85,7 @@ void queue_dequeue(queue* q)
         cout<<"removing: "<< n <<"\n";
         //increase head
         q->head = (q->head + 1) % (q->capacity);
+        q->size--;
     }
 }
 
