@@ -1,0 +1,7 @@
+Cracking the coding interview, Q5.6
+
+Write a function to determine the number of bits you would need to flip to convert integer A to integer because
+example:
+
+Input: 29 (11101), 15 (01111)
+Output: 2
