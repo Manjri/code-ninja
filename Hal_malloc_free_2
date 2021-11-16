@@ -1,0 +1,64 @@
+#include <iostream>
+#include <cstring>
+
+//this is my version of same question
+const uint32_t marker = 0xaabbccdd;
+
+// marker (4 bytes) | size (4 bytes) | data (size) | marker (4 bytes)
+void *hal_malloc(size_t size) {
+
+  uint32_t *p = (uint32_t*) malloc (size + (3 * sizeof(uint32_t)));
+  
+  uint32_t *s_ptr = p + 1; //1 : 1 * sizeof(uint32_t)
+  *s_ptr = size; //write the size which will be used to free data later
+
+  uint32_t *data_ptr = s_ptr + 1;
+
+  uint8_t *end_ptr = (uint8_t*)data_ptr + size; //converted into 1 byte
+
+  //uint32_t *end_p = (uint32_t*)end_ptr;
+
+  memcpy(p, &marker, sizeof(uint32_t));
+  memcpy(end_ptr, &marker, sizeof(uint32_t));
+
+  return data_ptr;
+}
+
+void hal_free(void *p) {
+
+  uint32_t* size_ptr = (uint32_t *)p - 1; //1*size of(uint32_t) which is 4 bytes
+  size_t data_size = *size_ptr; //to find out end marker
+  uint32_t* front_marker = (uint32_t *)size_ptr - 1;
+
+  int ret = memcmp(&marker, front_marker, sizeof(marker));
+  if(ret != 0){
+    printf("FRONT CORRUPTION! \n");
+  }
+
+  uint8_t* end_marker = (uint8_t *)p + data_size;
+
+  int ret2 = memcmp(&marker, end_marker, sizeof(marker));
+  if(ret2 != 0){
+    printf("END CORRUPTION! \n");
+  }
+  else{
+    printf("No corruption! \n");
+  }
+
+  free(front_marker);
+}
+
+
+int main() {
+  printf("My version of hal malloc and free!!\n");
+
+  uint8_t *ptr = (uint8_t*) hal_malloc(10);
+
+  /*for (int i=0; i<50; i++) {
+    ptr[i] = (uint8_t)i;
+  }*/
+
+  hal_free(ptr);
+
+  return 0;
+} 
