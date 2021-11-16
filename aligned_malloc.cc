@@ -5,7 +5,7 @@ using namespace std;
 
 /* intptr_t is an integer that has same size as size of pointer on platform. had to switch to this bcz % wont work with ptrs
  * whenever you want to do airthmatic operation on a pointer like comparison/multiply/division/bit manipulation, should use
- * inptr_t to treat ptr as a number.
+ * inptr_t to treat ptr as a number. but imp to note: you cannot typecast a intptr to other pointer ( ? )
  */
 
 void* aligned_malloc(int size, int align){
