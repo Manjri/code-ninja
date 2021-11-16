@@ -1,0 +1,66 @@
+//this is punits version. asked in apple phone round. markers are to written in front and back for detection of corruption at free. also include size field. return ptr to data
+
+#include <iostream>
+
+const uint32_t marker = 0xaabbccdd;
+
+//memory layout: marker | size | data | marker
+void *hal_malloc(size_t size) {
+
+  uint32_t *p = (uint32_t*) malloc (size + (3 * sizeof(uint32_t)));
+  p[0] = marker;
+
+  uint32_t *p_size = p + 1;
+  *p_size = size;
+
+  uint8_t *start_data = (uint8_t*) &p[2];
+  //uint8_t *start_data = p 
+
+  uint32_t *p_end_marker = (uint32_t*) (start_data + size);
+
+  *p_end_marker = marker;
+
+  return start_data;
+
+}
+
+void hal_free(void *p) {
+
+  intptr_t data_addr = (intptr_t)p;
+  intptr_t start_addr = data_addr - (2* sizeof(uint32_t));
+
+  uint32_t *p_start = (uint32_t *)start_addr;
+
+  if (p_start[0] != marker) {
+    printf("Front overflow\n");
+  }
+
+  size_t size = p_start[1]; // *(p_start + 1)
+
+  uint32_t *p_end_marker = (uint32_t*)(data_addr + size);
+  if (p_end_marker[0] != marker) {
+    printf("End overflow\n");
+  }
+  else{
+    printf("No corruption! \n");
+  }
+
+  //memcmp(&marker, p_end_marker, sizeof(marker));
+
+  free(p_start);
+}
+
+
+int main() {
+  std::cout << "Hello World!\n";
+
+  uint8_t *ptr = (uint8_t*) hal_malloc(10);
+
+  for (int i=0; i<10; i++) {
+    ptr[i] = (uint8_t)i;
+  }
+
+  hal_free(ptr);
+
+  return 0;
+} 
